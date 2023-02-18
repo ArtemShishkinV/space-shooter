@@ -2,6 +2,7 @@ import sys
 
 import pygame
 
+from pygame.event import Event
 from ship import Ship
 
 
@@ -13,25 +14,29 @@ class Game:
 
     def start(self):
         while True:
-            self._check_events()
+            self.__check_events()
             self.ship.update()
-            self._update_screen()
+            self.__update_screen()
 
-    def _check_events(self):
+    def __check_events(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
-            self._control(event)
+            self.__control(event)
 
-    def _update_screen(self):
+    def __update_screen(self):
         self.screen.fill("black")
         self.ship.blit_me()
         pygame.display.update()
 
-    def _control(self, event: pygame.event.Event):
+    def __control(self, event: Event):
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_RIGHT:
-                self.ship.moving_right = True
+            self.__control_keys_press(event, True)
         if event.type == pygame.KEYUP:
-            if event.key == pygame.K_RIGHT:
-                self.ship.moving_right = False
+            self.__control_keys_press(event, False)
+
+    def __control_keys_press(self, event: Event, is_pressed: bool):
+        if event.key == pygame.K_RIGHT:
+            self.ship.moving_right = is_pressed
+        if event.key == pygame.K_LEFT:
+            self.ship.moving_left = is_pressed
