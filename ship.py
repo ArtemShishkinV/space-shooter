@@ -8,7 +8,7 @@ class Ship:
         self.image = pygame.image.load("assets/player.png")
         self.rect = self.image.get_rect()
         self.rect.midbottom = self.screen_rect.midbottom
-        self.rect.y -= 20
+        self.rect.y -= 5
         self.moving_right = False
         self.moving_left = False
 
@@ -16,7 +16,7 @@ class Ship:
         self.screen.blit(self.image, self.rect)
 
     def update(self):
-        if self.moving_right:
+        if self.moving_right and self.rect.right < self.screen_rect.right:
             self.rect.x += 1
-        if self.moving_left:
+        if self.moving_left and self.rect.left > 0:
             self.rect.x -= 1
