@@ -2,12 +2,12 @@ import sys
 
 import pygame
 
-import menu
-from common import WIDTH, HEIGHT, get_main_menu_buttons
-from game import Game
+from controller import Game
+from model import menu
+from utils import WIDTH, HEIGHT, get_main_menu_buttons
 
 
-class GameController:
+class MainMenu:
     def __init__(self):
         pygame.init()
         self.menu = menu.Menu("SPACE SHOOTER", get_main_menu_buttons())

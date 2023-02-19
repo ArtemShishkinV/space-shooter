@@ -1,6 +1,6 @@
 import pygame
 
-from button import Button
+from model.button import Button
 
 
 def get_font(size):

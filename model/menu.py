@@ -1,7 +1,6 @@
 import pygame
 
-from button import Button
-from common import WIDTH, get_font
+from utils import WIDTH, get_font
 
 
 class Menu:

@@ -3,11 +3,8 @@ import sys
 import pygame
 from pygame.event import Event
 
-from alien import Alien
-from bullet import Bullet
-from common import MAX_COUNT_BULLETS, COUNT_ALIENS, HEIGHT
-from game_over import GameOver
-from ship import Ship
+from model import Alien, Bullet, Ship
+from utils import MAX_COUNT_BULLETS, COUNT_ALIENS, HEIGHT
 
 
 class Game:
@@ -56,6 +53,7 @@ class Game:
     def __collide_ship_with_aliens(self):
         if pygame.sprite.spritecollideany(self.ship, self.aliens):
             self.is_end = True
+            from controller import GameOver
             game_over = GameOver(self)
             game_over.start()
             return game_over

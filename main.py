@@ -1,3 +1,3 @@
-from game_controller import GameController
+from controller import MainMenu
 
-GameController().start()
+MainMenu().start()

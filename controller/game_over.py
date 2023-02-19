@@ -2,8 +2,8 @@ import sys
 
 import pygame
 
-from common import get_font, WIDTH, get_game_over_menu_buttons
-from menu import Menu
+from model import Menu
+from utils import get_font, WIDTH, get_game_over_menu_buttons
 
 
 class GameOver:

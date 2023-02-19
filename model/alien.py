@@ -2,7 +2,7 @@ from random import randint as rnd
 
 import pygame
 
-from common import WIDTH
+from utils import WIDTH
 
 
 class Alien(pygame.sprite.Sprite):
