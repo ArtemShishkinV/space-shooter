@@ -17,6 +17,6 @@ class Ship:
 
     def update(self):
         if self.moving_right and self.rect.right < self.screen_rect.right:
-            self.rect.x += 1
+            self.rect.x += 2
         if self.moving_left and self.rect.left > 0:
-            self.rect.x -= 1
+            self.rect.x -= 2

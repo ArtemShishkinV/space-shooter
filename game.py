@@ -6,6 +6,7 @@ from pygame.event import Event
 from alien import Alien
 from bullet import Bullet
 from common import MAX_COUNT_BULLETS, COUNT_ALIENS, HEIGHT
+from game_over import GameOver
 from ship import Ship
 
 
@@ -13,10 +14,16 @@ class Game:
     def __init__(self, screen: pygame.Surface):
         super().__init__()
         self.screen = screen
-        self.ship = Ship(screen)
+        self.__new_game()
+
+    def __new_game(self):
+        self.ship = Ship(self.screen)
         self.bullets = pygame.sprite.Group()
         self.aliens = pygame.sprite.Group()
         self.count = 0
+        self.is_end = False
+        self.restart = False
+        self.to_menu = False
 
     def start(self):
         self.__generate_aliens()
@@ -26,7 +33,18 @@ class Game:
             self.__update_bullets()
             self.__collide_bullets_with_aliens()
             self.__update_aliens()
+            game_over = self.__collide_ship_with_aliens()
+            if game_over:
+                if game_over.is_restart_game:
+                    self.__restart_game()
+                if game_over.back_to_menu:
+                    return
             self.__update_screen()
+
+    def __restart_game(self):
+        print("RESTART")
+        self.__new_game()
+        self.__generate_aliens()
 
     def __collide_bullets_with_aliens(self):
         collisions = pygame.sprite.groupcollide(self.aliens, self.bullets, True, True)
@@ -34,6 +52,13 @@ class Game:
         self.count += count_destroyed
         for i in range(count_destroyed):
             self.aliens.add_internal(Alien(self, self.aliens))
+
+    def __collide_ship_with_aliens(self):
+        if pygame.sprite.spritecollideany(self.ship, self.aliens):
+            self.is_end = True
+            game_over = GameOver(self)
+            game_over.start()
+            return game_over
 
     def __generate_aliens(self):
         for i in range(COUNT_ALIENS):

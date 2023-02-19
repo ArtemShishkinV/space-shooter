@@ -1,23 +1,14 @@
 import pygame
 
 from button import Button
-from common import WIDTH, HEIGHT, get_font
+from common import WIDTH, get_font
 
 
-class MainMenu:
-    def __init__(self) -> None:
+class Menu:
+    def __init__(self, header, buttons) -> None:
         super().__init__()
-        self.header = get_font(80).render("SPACE SHOOTER", True, "Green")
-        self.play = Button(image=None, pos=(WIDTH / 2, HEIGHT / 2 - 100),
-                           text_input="PLAY", font=get_font(40),
-                           base_color="White", hovering_color="Green")
-        self.options = Button(image=None, pos=(WIDTH / 2, HEIGHT / 2),
-                              text_input="OPTIONS", font=get_font(40),
-                              base_color="White", hovering_color="Green")
-        self.exit = Button(image=None, pos=(WIDTH / 2, HEIGHT / 2 + 200),
-                           text_input="EXIT", font=get_font(40),
-                           base_color="White", hovering_color="Green")
-        self.buttons = [self.play, self.options, self.exit]
+        self.header = get_font(80).render(header, True, "Green")
+        self.buttons = buttons
         self.active = 0
 
     def draw(self, screen: pygame.Surface):
@@ -34,10 +25,9 @@ class MainMenu:
             self.change_active_button_value(-1)
 
     def change_active_button_value(self, change_value):
-        print(self.active)
         if len(self.buttons) == self.active + change_value:
             self.active = 0
         elif self.active + change_value == -1:
-            self.active = 2
+            self.active = len(self.buttons) - 1
         else:
             self.active += change_value

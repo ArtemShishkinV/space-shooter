@@ -3,25 +3,24 @@ import sys
 import pygame
 
 import menu
-from common import WIDTH, HEIGHT
+from common import WIDTH, HEIGHT, get_main_menu_buttons
 from game import Game
 
 
 class GameController:
     def __init__(self):
         pygame.init()
-        self.menu = menu.MainMenu()
+        self.menu = menu.Menu("SPACE SHOOTER", get_main_menu_buttons())
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
         pygame.display.set_caption("Space Shooter")
 
     def start(self):
         while True:
-            mouse_pos = pygame.mouse.get_pos()
             self.menu.draw(self.screen)
-            self._check_events(mouse_pos)
+            self._check_events()
             pygame.display.update()
 
-    def _check_events(self, mouse_pos):
+    def _check_events(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
