@@ -17,7 +17,7 @@ class GameController:
     def start(self):
         while True:
             mouse_pos = pygame.mouse.get_pos()
-            self.menu.draw(self.screen, mouse_pos)
+            self.menu.draw(self.screen)
             self._check_events(mouse_pos)
             pygame.display.update()
 
@@ -26,13 +26,15 @@ class GameController:
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                self._check_click_on_buttons(mouse_pos)
+            if event.type == pygame.KEYDOWN:
+                self._check_enter_buttons(event)
+                self.menu.change_active_button(event)
 
-    def _check_click_on_buttons(self, mouse_pos):
-        if self.menu.play.check_for_input(mouse_pos):
-            game = Game(self.screen)
-            game.start()
-        if self.menu.exit.check_for_input(mouse_pos):
-            pygame.quit()
-            sys.exit()
+    def _check_enter_buttons(self, event):
+        if event.key == pygame.K_RETURN:
+            if self.menu.active == 0:
+                game = Game(self.screen)
+                game.start()
+            if self.menu.active == 2:
+                pygame.quit()
+                sys.exit()

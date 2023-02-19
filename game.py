@@ -3,8 +3,9 @@ import sys
 import pygame
 from pygame.event import Event
 
+from alien import Alien
 from bullet import Bullet
-from common import MAX_COUNT_BULLETS
+from common import MAX_COUNT_BULLETS, COUNT_ALIENS, HEIGHT
 from ship import Ship
 
 
@@ -14,13 +15,29 @@ class Game:
         self.screen = screen
         self.ship = Ship(screen)
         self.bullets = pygame.sprite.Group()
+        self.aliens = pygame.sprite.Group()
+        self.count = 0
 
     def start(self):
+        self.__generate_aliens()
         while True:
             self.__check_events()
             self.ship.update()
             self.__update_bullets()
+            self.__collide_bullets_with_aliens()
+            self.__update_aliens()
             self.__update_screen()
+
+    def __collide_bullets_with_aliens(self):
+        collisions = pygame.sprite.groupcollide(self.aliens, self.bullets, True, True)
+        count_destroyed = len(collisions)
+        self.count += count_destroyed
+        for i in range(count_destroyed):
+            self.aliens.add_internal(Alien(self, self.aliens))
+
+    def __generate_aliens(self):
+        for i in range(COUNT_ALIENS):
+            self.aliens.add_internal(Alien(self, self.aliens))
 
     def __check_events(self):
         for event in pygame.event.get():
@@ -32,6 +49,7 @@ class Game:
         self.screen.fill("black")
         self.ship.blit_me()
         self.__draw_bullets()
+        self.__draw_aliens()
         pygame.display.update()
 
     def __control(self, event: Event):
@@ -49,7 +67,7 @@ class Game:
 
     def __control_fire(self, event: Event):
         if event.key == pygame.K_SPACE and len(self.bullets) <= MAX_COUNT_BULLETS:
-            self.bullets.add_internal(Bullet(self))
+            self.bullets.add_internal(Bullet(self, self.bullets))
 
     def __update_bullets(self):
         self.bullets.update()
@@ -57,6 +75,19 @@ class Game:
             if bullet.rect.bottom <= 0:
                 self.bullets.remove_internal(bullet)
 
+    def __update_aliens(self):
+        self.aliens.update()
+        for alien in self.aliens.sprites():
+            if alien.rect.top > HEIGHT:
+                self.aliens.remove_internal(alien)
+                self.aliens.add_internal(Alien(self, self.aliens))
+
     def __draw_bullets(self):
-        for bullet in self.bullets.sprites():
-            bullet.draw()
+        self.__draw_groups(self.bullets)
+
+    def __draw_aliens(self):
+        self.__draw_groups(self.aliens)
+
+    def __draw_groups(self, sprites):
+        for sprite in sprites.sprites():
+            sprite.draw()
