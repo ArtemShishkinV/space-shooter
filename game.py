@@ -1,10 +1,10 @@
 import sys
 
 import pygame
-
 from pygame.event import Event
 
 from bullet import Bullet
+from common import MAX_COUNT_BULLETS
 from ship import Ship
 
 
@@ -19,8 +19,8 @@ class Game:
         while True:
             self.__check_events()
             self.ship.update()
+            self.__update_bullets()
             self.__update_screen()
-            self.bullets.update()
 
     def __check_events(self):
         for event in pygame.event.get():
@@ -31,8 +31,7 @@ class Game:
     def __update_screen(self):
         self.screen.fill("black")
         self.ship.blit_me()
-        for bullet in self.bullets.sprites():
-            bullet.draw()
+        self.__draw_bullets()
         pygame.display.update()
 
     def __control(self, event: Event):
@@ -49,5 +48,15 @@ class Game:
             self.ship.moving_left = is_pressed
 
     def __control_fire(self, event: Event):
-        if event.key == pygame.K_SPACE:
+        if event.key == pygame.K_SPACE and len(self.bullets) <= MAX_COUNT_BULLETS:
             self.bullets.add_internal(Bullet(self))
+
+    def __update_bullets(self):
+        self.bullets.update()
+        for bullet in self.bullets.sprites():
+            if bullet.rect.bottom <= 0:
+                self.bullets.remove_internal(bullet)
+
+    def __draw_bullets(self):
+        for bullet in self.bullets.sprites():
+            bullet.draw()
